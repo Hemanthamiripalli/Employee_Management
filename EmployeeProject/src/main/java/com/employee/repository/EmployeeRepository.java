@@ -17,6 +17,6 @@ public interface EmployeeRepository extends JpaRepository<Employees, Long> {
 
 	List<Employees> findByStatus(String status);
 
-	boolean existsByEmpEmail(String empEmail);
+	boolean existsByEmpEmail(String empEmail); 
 
 }
