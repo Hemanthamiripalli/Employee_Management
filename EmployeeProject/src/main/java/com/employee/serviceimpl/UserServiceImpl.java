@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.employee.dtos.AuthResponseDto;
 import com.employee.dtos.ResponseDto;
 import com.employee.dtos.UserDto;
 import com.employee.models.Users;
 import com.employee.repository.UserRepository;
+import com.employee.security.JwtService;
 import com.employee.service.UserService;
 
 @Service
@@ -20,6 +22,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	PasswordEncoder encode;
+
+	@Autowired
+	JwtService jwtService;
 
 	@Override
 	public ResponseDto userSignup(UserDto dto) {
@@ -95,9 +100,13 @@ public class UserServiceImpl implements UserService {
 			return response;
 		}
 
-		response.setMessage("Login Successful");
-		response.setStatus("SUCCESS");
-		response.setStatusCode("200");
-		return response;
+		AuthResponseDto authResponse = new AuthResponseDto();
+		authResponse.setMessage("Login Successful");
+		authResponse.setStatus("SUCCESS");
+		authResponse.setStatusCode("200");
+		authResponse.setToken(jwtService.generateToken(existingUser.get().getEmail()));
+		authResponse.setTokenType("Bearer");
+
+		return authResponse;
 	}
 }
