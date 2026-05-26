@@ -31,3 +31,34 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Local environment / secrets ###
+.env
+.env.*
+!.env.example
+src/main/resources/application-local.properties
+src/main/resources/application-local.yml
+src/main/resources/application-local.yaml
+src/main/resources/application-secret.properties
+src/main/resources/application-secret.yml
+src/main/resources/application-secret.yaml
+*.pem
+*.key
+*.p12
+*.jks
+
+### Logs ###
+*.log
+logs/
+
+### Java / Maven generated files ###
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+replay_pid*
+
+### OS files ###
+.DS_Store
+Thumbs.db
