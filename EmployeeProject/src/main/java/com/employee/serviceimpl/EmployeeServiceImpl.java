@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	EmployeeRepository empRepo;
+
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	@Override
 	public String saveEmp(EmployeeDto dto) {
@@ -59,39 +63,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public List<EmployeeDto> getAll() {
 
-		try {
+		List<EmployeeDto> list = new ArrayList<>();
 
-			List<Employees> empList = empRepo.findByStatus("Active");
-
-			List<EmployeeDto> list = new ArrayList<>();
-
-			for (Employees emp : empList) {
-
-				EmployeeDto dto = new EmployeeDto();
-
-				dto.setId(emp.getId());
-
-				dto.setEmpName(emp.getEmpName());
-
-				dto.setEmpEmail(emp.getEmpEmail());
-
-				dto.setJobTitle(emp.getJobTitle());
-
-				dto.setSalary(emp.getSalary());
-
-				dto.setStatus(emp.getStatus());
-
-				list.add(dto);
-			}
+		String query = "SELECT * FROM employees where status = 'ACTIVE'";
+		jdbcTemplate.query(query, (rs) -> {
+			EmployeeDto dto = new EmployeeDto();
+			dto.setId(rs.getLong("id"));
+			dto.setEmpName(rs.getString("emp_name"));
+			dto.setEmpEmail(rs.getString("emp_email"));
+			dto.setJobTitle(rs.getString("jobtitle"));
+			dto.setSalary(rs.getString("salary"));
+			dto.setStatus(rs.getString("status"));
+			list.add(dto);
+		});
 
 			return list;
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-
-			return null;
-		}
 	}
 
 	@Override
